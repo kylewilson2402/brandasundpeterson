@@ -97,7 +97,7 @@ window.SITE = {
 
   /* ---------------------------------------------------------------- */
   teaching: {
-    intro: "Projects, classroom moments and student work from elementary and middle school art classes.",
+    intro: "Projects, classroom moments and student work from my elementary and middle school classes and the art class I teach.",
     subjects: [
       "Art + design fundamentals: line, shape, color",
       "Character design",
@@ -132,8 +132,8 @@ window.SITE = {
         cover: "images/teaching/projects/mood-monster/img-6316.jpg",
         images: ["6290", "6303", "6309", "6310", "6316", "6322", "6340", "6341", "6364", "6374"].map(n => ({
           image: `images/teaching/projects/mood-monster/img-${n}.jpg`, thumb: `images/teaching/projects/mood-monster/img-${n}-sm.jpg`, caption: "Mood Monster, student work" })) },
-      { title: "Foods with Moods", grade: "Middle school",
-        about: "Painted food still lifes, working on light, shadow and color.",   // PLACEHOLDER (check wording with Bran)
+      { title: "Foods with Moods", grade: "Art class",
+        about: "Food still life paintings from the art class I teach, working on light, shadow and color.",   // PLACEHOLDER (check wording with Bran)
         cover: "images/teaching/projects/foods-with-moods/img-6280.jpg",
         images: ["6267", "6275", "6280", "6284", "6285"].map(n => ({
           image: `images/teaching/projects/foods-with-moods/img-${n}.jpg`, thumb: `images/teaching/projects/foods-with-moods/img-${n}-sm.jpg`, caption: "Foods with Moods, student work" })) },
@@ -171,7 +171,7 @@ window.SITE = {
     photo: "",            // leave empty to use the blue head doodle
     bio: [
       "I grew up surrounded by creative people. The musicians, artists and writers in my family pushed me to chase every creative hobby I had, and by 15 I was planning a career in art and taking online illustration courses.",
-      "Somewhere between finishing my associate's degree and planning my bachelor's, I realized that alongside my own work I wanted to teach what I'd learned to younger generations. Today that means illustration and animation on one side, and art classes for elementary and middle schoolers on the other.",
+      "Somewhere between finishing my associate's degree and planning my bachelor's, I realized that alongside my own work I wanted to teach what I'd learned to younger generations. Today that means illustration and animation on one side, and teaching on the other, with elementary and middle school students and at an art class.",
       "I believe everyone deserves a creative outlet, and that making art is one of the best ways to learn how to solve problems.",
     ],
     tools: [],            // e.g. ["Procreate", "Photoshop", "Pencil + paper"] (empty = hidden)
