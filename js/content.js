@@ -132,11 +132,11 @@ window.SITE = {
         cover: "images/teaching/projects/mood-monster/img-6316.jpg",
         images: ["6290", "6303", "6309", "6310", "6316", "6322", "6340", "6341", "6364", "6374"].map(n => ({
           image: `images/teaching/projects/mood-monster/img-${n}.jpg`, thumb: `images/teaching/projects/mood-monster/img-${n}-sm.jpg`, caption: "Mood Monster, student work" })) },
-      { title: "Foods with Moods", grade: "Art class",
+      { title: "Food Still Lifes", grade: "Art class",
         about: "Food still life paintings from the art class I teach, working on light, shadow and color.",   // PLACEHOLDER (check wording with Bran)
         cover: "images/teaching/projects/foods-with-moods/img-6280.jpg",
         images: ["6267", "6275", "6280", "6284", "6285"].map(n => ({
-          image: `images/teaching/projects/foods-with-moods/img-${n}.jpg`, thumb: `images/teaching/projects/foods-with-moods/img-${n}-sm.jpg`, caption: "Foods with Moods, student work from my art class" })) },
+          image: `images/teaching/projects/foods-with-moods/img-${n}.jpg`, thumb: `images/teaching/projects/foods-with-moods/img-${n}-sm.jpg`, caption: "Student work from my art class" })) },
       { title: "Monet Bridges", grade: "Elementary",
         about: "After looking at Claude Monet's bridge paintings, students drew and painted bridge scenes of their own.",   // PLACEHOLDER (check wording with Bran)
         cover: "images/teaching/projects/monet-bridges/monet-bridges.jpg",
@@ -156,12 +156,12 @@ window.SITE = {
     /* Student work wall (a mix from the projects above) */
     studentWork: [
       { n: "mood-monster/img-6316", caption: "Mood Monster" },
-      { n: "foods-with-moods/img-6280", caption: "Foods with Moods" },
+      { n: "foods-with-moods/img-6280", caption: "Art class" },
       { n: "mood-monster/img-6322", caption: "Mood Monster" },
       { n: "monet-bridges/monet-bridges", caption: "Monet Bridges" },
-      { n: "foods-with-moods/img-6267", caption: "Foods with Moods" },
+      { n: "foods-with-moods/img-6267", caption: "Art class" },
       { n: "mood-monster/img-6290", caption: "Mood Monster" },
-      { n: "foods-with-moods/img-6284", caption: "Foods with Moods" },
+      { n: "foods-with-moods/img-6284", caption: "Art class" },
       { n: "mood-monster/img-6341", caption: "Mood Monster" },
     ].map(w => ({ image: `images/teaching/projects/${w.n}.jpg`, thumb: `images/teaching/projects/${w.n}-sm.jpg`, caption: w.caption }))
   },
