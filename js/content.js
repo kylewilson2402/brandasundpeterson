@@ -136,7 +136,7 @@ window.SITE = {
         about: "Food still life paintings from the art class I teach, working on light, shadow and color.",   // PLACEHOLDER (check wording with Bran)
         cover: "images/teaching/projects/foods-with-moods/img-6280.jpg",
         images: ["6267", "6275", "6280", "6284", "6285"].map(n => ({
-          image: `images/teaching/projects/foods-with-moods/img-${n}.jpg`, thumb: `images/teaching/projects/foods-with-moods/img-${n}-sm.jpg`, caption: "Foods with Moods, student work" })) },
+          image: `images/teaching/projects/foods-with-moods/img-${n}.jpg`, thumb: `images/teaching/projects/foods-with-moods/img-${n}-sm.jpg`, caption: "Foods with Moods, student work from my art class" })) },
       { title: "Monet Bridges", grade: "Elementary",
         about: "After looking at Claude Monet's bridge paintings, students drew and painted bridge scenes of their own.",   // PLACEHOLDER (check wording with Bran)
         cover: "images/teaching/projects/monet-bridges/monet-bridges.jpg",
