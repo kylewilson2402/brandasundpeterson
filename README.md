@@ -17,12 +17,12 @@ js/content.js       ALL the words, pieces, photos and prices  <- edit this one
 js/main.js          behaviour (intro, wipes, lightbox, draw mode, form)
 js/signature.js     Bran's signature traced into pen strokes (don't edit)
 images/doodles/     Bran's home page doodles + signature
-images/illustrations/        put illustration images here
-images/animations/           .mp4 files and poster images
-images/teaching/classroom/   classroom photos
-images/teaching/student-work/
-images/teaching/lessons/     lesson plan PDFs
-images/about/                Bran's photo
+images/illustrations/          illustration images (big + "-sm" small copies)
+images/illustrations/process/  WIP / process shots, one folder per piece
+images/animations/             .mp4 files and poster images
+images/teaching/classroom/     classroom photos (students' faces blurred)
+images/teaching/projects/      one folder per teaching project
+images/about/                  Bran's photo
 ```
 
 ## Adding work (the only thing Bran needs to know)
@@ -45,6 +45,18 @@ Rules of thumb:
 - Export images as JPG, max about 2000px wide, under 1 MB each.
 - Videos can be an `.mp4` in `images/animations/` or a YouTube / Vimeo link.
 - Lines marked `// PLACEHOLDER` in content.js are sample copy for Bran to replace. That includes the teaching philosophy quote and principles, the bio, tools, timeline, student count and prices.
+
+## Process rewind (illustrations)
+
+Any illustration can have a `process: [ ... ]` list in content.js. When it does, opening the piece shows a "watch it rewind" button (plays the steps backwards like a tape) and a down arrow ("rewind the process") that scrolls through every step from the finished piece back to the first sketch. List the steps in the order they were made; the site reverses them. Pieces with process shots get a small "process" tag on the board.
+
+```js
+process: [
+  { image: "images/illustrations/process/skater/1-thumbnails.jpg", label: "thumbnails" },
+  { image: "images/illustrations/process/skater/2-sketch.jpg", label: "rough sketch", note: "optional sentence" },
+  { image: "images/illustrations/process/skater/3-lineart.jpg", label: "line art" },
+]
+```
 
 ## Contact form
 
@@ -71,9 +83,9 @@ A custom domain (like branpeterson.com) can be added in the same Pages settings.
 - Doodle hover bits: head turns and winks, horse gallops off, camera bot spins its reels, apple rolls out of the basket, hand taps the mail
 - Eraser wipe page transitions, marker tray nav with the active marker uncapped
 - "Draw more!" post-it lets visitors draw on the board with the tray markers; the eraser wipes it
-- Illustrations: filterable pinned wall plus lightbox (arrow keys and Esc work)
+- Illustrations: filterable pinned wall plus lightbox (arrow keys and Esc work), with a process rewind on pieces that have WIP shots
 - Animations: showreel screen, film strip of clips that play in the screen, process strip
-- Art Teaching: what I teach, **teaching philosophy**, **classroom photos on a clothesline**, lesson plans with PDF links, student work wall
+- Art Teaching: what I teach, teaching philosophy (with the full PDF), classroom photos on a clothesline, project cards that open every photo from that project, student work wall
 - About and Contact / Commissions with a price menu
 - Works on phones: doodles stack in a grid, marker caps become the bottom bar
 - Section links work directly: `index.html#teaching`, `#illustrations`, etc.

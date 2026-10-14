@@ -82,12 +82,16 @@
     <div class="screenwrap">
       <div><div class="screen" id="reel"></div><p class="reelcap" id="reelcap"></p></div>
       <div class="reelside"><div class="postit big" id="animnote"><span class="mag"></span></div>
-        <p class="hs c-green sidehand">loops, GIFs,<br>title cards</p></div>
+        <p class="hs c-green sidehand" id="sidehand"></p></div>
     </div>
-    <div class="h2 c-green"><h3 class="mh">Shorts &amp; loops</h3><span class="squig"></span></div>
-    <div class="strip" id="strip"></div>
-    <div class="h2 c-green"><h3 class="mh">How a shot gets made</h3><span class="squig"></span></div>
-    <div class="process" id="process"></div>
+    <div id="clipsblock">
+      <div class="h2 c-green"><h3 class="mh">Shorts &amp; loops</h3><span class="squig"></span></div>
+      <div class="strip" id="strip"></div>
+    </div>
+    <div id="processblock">
+      <div class="h2 c-green"><h3 class="mh">How a shot gets made</h3><span class="squig"></span></div>
+      <div class="process" id="process"></div>
+    </div>
   </section>
 
   <!-- ============ ART TEACHING ============ -->
@@ -105,7 +109,7 @@
     <div class="h2 c-magenta"><h3 class="mh">Teaching philosophy</h3><span class="squig"></span></div>
     <div class="philosophy">
       <figure class="bubble" id="quote"></figure>
-      <ol class="principles" id="principles"></ol>
+      <div><ol class="principles" id="principles"></ol><p class="fullpdf" id="fullpdf"></p></div>
     </div>
 
     <!-- Classroom photos -->
@@ -113,8 +117,8 @@
       <span class="postit blue small tilt-r">photos shared<br>with permission</span></div>
     <div class="clothesline" id="classroom"></div>
 
-    <div class="h2 c-magenta"><h3 class="mh">Lesson plans</h3><span class="squig"></span></div>
-    <div class="lessons" id="lessons"></div>
+    <div class="h2 c-magenta"><h3 class="mh">Projects</h3><span class="squig"></span></div>
+    <div class="projects" id="projects"></div>
 
     <div class="h2 c-magenta"><h3 class="mh">Student work</h3><span class="squig"></span></div>
     <div class="wall" id="wall"></div>
@@ -128,7 +132,7 @@
     <div class="aboutgrid">
       <div class="polaroid"><span class="mag" style="--c:var(--blue)"></span><div class="ph" id="aboutphoto"></div><span class="cap">me, probably drawing</span></div>
       <div><div class="bio" id="bio"></div>
-        <h3 class="mh h-sm">Tools I use</h3><div class="tools" id="tools"></div></div>
+        <div id="toolsblock"><h3 class="mh h-sm">Tools I use</h3><div class="tools" id="tools"></div></div></div>
     </div>
     <div class="h2"><h3 class="mh">So far</h3></div>
     <div class="timeline" id="timeline"></div>
@@ -165,10 +169,22 @@
 <canvas id="ink" aria-hidden="true"></canvas>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Enlarged image" hidden>
-  <button class="nav" id="lbprev" type="button" aria-label="Previous">&larr; prev</button>
-  <div class="sheet lbsheet"><span class="mag"></span><span class="mag m2" style="--c:var(--blue)"></span><div id="lbart"></div></div>
-  <div class="lbpost" id="lbinfo"></div>
-  <button class="nav" id="lbnext" type="button" aria-label="Next">next &rarr;</button>
+  <div class="lbscroll" id="lbscroll" tabindex="-1">
+    <div class="lbmain">
+      <button class="nav" id="lbprev" type="button" aria-label="Previous">&larr; prev</button>
+      <div class="lbcenter">
+        <div class="sheet lbsheet" id="lbsheet"><span class="mag"></span><span class="mag m2" style="--c:var(--blue)"></span><div id="lbart"></div><span class="vhs" id="vhs" aria-hidden="true"></span></div>
+        <div class="rwbar" id="rwbar" hidden>
+          <button class="rwplay postit" id="rwplay" type="button"><span class="mag" style="--c:var(--red)"></span><span id="rwplaytxt">&#9664;&#9664; watch it rewind</span></button>
+          <button class="rwdown" id="rwdown" type="button"><span id="rwdowntxt">rewind the process</span>
+            <svg viewBox="0 0 40 64" aria-hidden="true"><path d="M20 4 C 18 22 22 38 20 58 M8 44 L20 59 L32 44"/></svg></button>
+        </div>
+      </div>
+      <div class="lbpost" id="lbinfo"></div>
+      <button class="nav" id="lbnext" type="button" aria-label="Next">next &rarr;</button>
+    </div>
+    <section class="rewind" id="rewind" hidden aria-label="Process, from the finished piece back to the first sketch"></section>
+  </div>
   <button class="nav x" id="lbx" type="button">esc to close &times;</button>
 </div>
 

@@ -30,11 +30,13 @@ const CAMERA = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" wi
 function placeholder(shape, label = 'art goes here', icon = PENCIL) {
   return `<div class="ph-art ${shape ? 'ar-' + shape : ''}">${icon}<span>${esc(label)}</span></div>`;
 }
-function art(item, shape, label, icon) {
-  return item && item.image
-    ? `<img src="${esc(item.image)}" alt="${esc(item.title || item.caption || '')}" loading="lazy">`
-    : placeholder(shape || (item && item.shape), label, icon);
+// art(): the board version uses the small "thumb" when there is one; full=true uses the big image (lightbox)
+function art(item, shape, label, icon, full) {
+  if (!item || !item.image) return placeholder(shape || (item && item.shape), label, icon);
+  const src = full ? item.image : (item.thumb || item.image);
+  return `<img src="${esc(src)}" alt="${esc(item.alt || item.title || item.caption || '')}" loading="lazy" decoding="async">`;
 }
+const hasProcess = p => Array.isArray(p.process) && p.process.some(x => x && x.image);
 function markerSVG(color) {
   return `<svg viewBox="0 0 150 30" aria-hidden="true"><rect x="3" y="27" width="140" height="5" rx="2" fill="#000" opacity=".18"/><rect x="0" y="2" width="112" height="26" rx="6" fill="#F4F5F6"/><rect x="0" y="18" width="112" height="10" rx="4" fill="#000" opacity=".06"/><rect x="10" y="6" width="34" height="18" rx="3" fill="${color}"/><text x="27" y="19.5" font-size="11" fill="#fff" text-anchor="middle" font-family="Patrick Hand, sans-serif">BP</text><rect x="104" y="2" width="9" height="26" fill="${color}"/><polygon points="112,8 132,12 132,18 112,22" fill="#DADDE0"/><polygon points="132,12 144,14.5 144,15.5 132,18" fill="${color}"/><g class="mcap"><rect x="112" y="0" width="36" height="30" rx="7" fill="${color}"/><rect x="116" y="3" width="26" height="5" rx="2" fill="#fff" opacity=".35"/></g></svg>`;
 }
@@ -63,8 +65,10 @@ function buildChrome() {
 
 function buildPreviews() {
   const ill = S.illustrations.items.slice(0, 3).map((p, i) =>
-    `<a class="pv" href="#illustrations" data-go="illustrations"><span class="sheet" style="transform:rotate(${tilt(i)}deg)"><span class="mag" style="--c:${PINS[i]}"></span>${art(p)}</span><span class="cap">${esc(p.title)}</span></a>`);
-  const anim = S.animations.clips.slice(0, 3).map((c, i) =>
+    `<a class="pv" href="#illustrations" data-go="illustrations"><span class="sheet" style="transform:rotate(${tilt(i)}deg)"><span class="mag" style="--c:${PINS[i]}"></span>${art(p)}</span><span class="cap">${esc(p.short || p.title)}</span></a>`);
+  const reels = [S.animations.showreel, ...S.animations.clips].filter(c => c && (c.video || c.poster));
+  const animList = reels.length ? reels : S.animations.clips;
+  const anim = animList.slice(0, 3).map((c, i) =>
     `<a class="pv" href="#animations" data-go="animations"><span class="sheet" style="transform:rotate(${tilt(i + 2)}deg)"><span class="mag" style="--c:${PINS[i + 1]}"></span>${c.poster ? `<img src="${esc(c.poster)}" alt="" loading="lazy">` : placeholder('wide', 'clip goes here')}</span><span class="cap">${esc(c.title)}</span></a>`);
   const teach = S.teaching.classroom.slice(0, 3).map((c, i) =>
     `<a class="pv" href="#teaching" data-go="teaching"><span class="sheet" style="transform:rotate(${tilt(i + 4)}deg)"><span class="mag" style="--c:${PINS[(i + 2) % 5]}"></span>${art(c, 'square', 'classroom photo', CAMERA)}</span><span class="cap">${esc(c.caption)}</span></a>`);
@@ -85,8 +89,8 @@ function buildIllustrations() {
   $('#chips').innerHTML = tags.map((t, i) =>
     `<button class="chip" type="button" data-tag="${esc(t)}" aria-pressed="${i === 0}" style="background:${CHIP_COLORS[i % 4]};transform:rotate(${[-3, 2, -1, 3, -2][i % 5]}deg)">${esc(t)}</button>`).join('');
   $('#gallery').innerHTML = items.map((p, i) =>
-    `<div class="item" data-tags="${esc((p.tags || []).join('|'))}"><button class="sheet" type="button" data-lb="ill" data-i="${i}" style="transform:rotate(${tilt(i)}deg)" aria-label="Open ${esc(p.title)}"><span class="mag" style="--c:${PINS[i % 5]}"></span>${art(p)}</button>
-     <span class="cap">${esc(p.title)}${p.year ? `<small>${esc(p.year)}</small>` : ''}</span></div>`).join('');
+    `<div class="item" data-tags="${esc((p.tags || []).join('|'))}"><button class="sheet" type="button" data-lb="ill" data-i="${i}" style="transform:rotate(${tilt(i)}deg)" aria-label="Open ${esc(p.title)}"><span class="mag" style="--c:${PINS[i % 5]}"></span>${art(p)}${hasProcess(p) ? `<span class="has-process">&#9664;&#9664; process</span>` : ''}</button>
+     <span class="cap">${esc(p.short || p.title)}${p.year ? `<small>${esc(p.year)}</small>` : ''}</span></div>`).join('');
   $('#chips').addEventListener('click', e => {
     const c = e.target.closest('.chip'); if (!c) return;
     $$('.chip').forEach(x => x.setAttribute('aria-pressed', x === c));
@@ -113,6 +117,12 @@ function buildAnimations() {
   const A = S.animations;
   setScreen(A.showreel, false);
   $('#animnote').insertAdjacentHTML('beforeend', A.note.map(esc).join('<br>'));
+  if (A.sidenote) $('#sidehand').innerHTML = A.sidenote.link
+    ? `<a href="#${esc(A.sidenote.link)}" data-go="${esc(A.sidenote.link)}">${A.sidenote.lines.map(esc).join('<br>')} &rarr;</a>`
+    : A.sidenote.lines.map(esc).join('<br>');
+  // sections with nothing in them yet stay hidden so the live site never looks unfinished
+  $('#clipsblock').hidden = !A.clips.some(c => c.video || c.poster);
+  $('#processblock').hidden = !A.process.some(p => p.image);
   $('#strip').innerHTML = A.clips.map((c, i) =>
     `<button class="clip" type="button" data-clip="${i}" aria-label="Play ${esc(c.title)}">${c.poster ? `<img src="${esc(c.poster)}" alt="" loading="lazy">` : ''}<span class="len">${esc(c.length)}</span></button>`).join('');
   $('#strip').insertAdjacentHTML('afterend', `<div class="stripwrap"><div class="stripcaps">${A.clips.map(c => `<span class="clipcap">${esc(c.title)}</span>`).join('')}</div></div>`);
@@ -133,20 +143,25 @@ function buildTeaching() {
   $('#checks').innerHTML = T.subjects.map((t, i) =>
     `<li><svg viewBox="0 0 34 34" aria-hidden="true"><path class="box" d="M3 4 L31 3 L32 31 L2 32 Z"/><path class="tick" d="M6 18 L14 27 L33 1" style="animation-delay:${.3 + i * .15}s"/></svg>${esc(t)}</li>`).join('');
   $('#tip').insertAdjacentHTML('beforeend', T.tip.map(esc).join('<br>'));
-  $('#taught').innerHTML = `${esc(T.studentsTaught)}<small>students taught</small>`;
+  if (T.studentsTaught) $('#taught').innerHTML = `${esc(T.studentsTaught)}<small>students taught</small>`;
+  else { $('#taught').remove(); $('.teachtop').style.gridTemplateColumns = '1.2fr 1fr'; }
   // philosophy bubble (hand drawn ellipse + tail)
   $('#quote').innerHTML =
     `<svg viewBox="0 0 600 300" preserveAspectRatio="none" aria-hidden="true"><path vector-effect="non-scaling-stroke" d="M300 12 C 470 8 590 70 588 146 C 586 214 480 268 330 270 C 300 270 260 268 230 264 L 150 300 L 178 256 C 70 236 10 196 12 140 C 14 70 120 14 320 18"/></svg>
-     <blockquote>&ldquo;${T.philosophy.quote.map(esc).join('<br>')}&rdquo;</blockquote><figcaption>Bran</figcaption>`;
+     <blockquote>&ldquo;${[].concat(T.philosophy.quote).map(esc).join(' ')}&rdquo;</blockquote><figcaption>Bran</figcaption>`;
   $('#principles').innerHTML = T.philosophy.principles.map(p => `<li><b>${esc(p.title)}</b><span>${esc(p.text)}</span></li>`).join('');
+  if (T.philosophy.pdf) $('#fullpdf').innerHTML = `<a href="${esc(T.philosophy.pdf)}" target="_blank" rel="noopener">read my full teaching philosophy (PDF)</a>`;
   // classroom clothesline
   $('#classroom').innerHTML = T.classroom.map((c, i) =>
     `<div class="photo"><span class="pin"></span><button type="button" data-lb="class" data-i="${i}" aria-label="Open photo: ${esc(c.caption)}">${art(c, 'square', 'classroom photo', CAMERA)}<span class="cap">${esc(c.caption)}</span></button></div>`).join('');
   const line = $('#classroom'); const sizeLine = () => line.style.setProperty('--lw', line.scrollWidth + 'px');
   addEventListener('resize', sizeLine); setTimeout(sizeLine, 50);
-  $('#lessons').innerHTML = T.lessons.map((l, i) =>
-    `<div><div class="lined" style="transform:rotate(${[-1.2, .8, -.4][i % 3]}deg)"><span class="tape"></span><b>${esc(l.title)}</b>${l.lines.map(esc).join('<br>')}</div>
-     ${l.pdf ? `<a class="dl" href="${esc(l.pdf)}" target="_blank" rel="noopener">download PDF</a>` : `<span class="dl off">PDF coming soon</span>`}</div>`).join('');
+  $('#projects').innerHTML = (T.projects || []).map((p, i) => {
+    const cover = p.images.find(x => x.image === p.cover) || p.images[0];
+    return `<article class="project"><button class="sheet" type="button" data-lb="proj" data-p="${i}" data-i="0" style="transform:rotate(${tilt(i, .6)}deg)" aria-label="Open ${esc(p.title)}"><span class="mag" style="--c:${PINS[(i + 4) % 5]}"></span>${art(cover, '', 'project photo', CAMERA)}</button>
+      <h4>${esc(p.title)}</h4><span class="postit pink grade">${esc(p.grade)}</span><p>${esc(p.about)}</p>
+      <button class="more" type="button" data-lb="proj" data-p="${i}" data-i="0">see all ${p.images.length} &rarr;</button></article>`;
+  }).join('');
   $('#wall').innerHTML = T.studentWork.map((w, i) =>
     `<div><button class="sheet" type="button" data-lb="student" data-i="${i}" style="transform:rotate(${tilt(i, .8)}deg)" aria-label="Open student work: ${esc(w.caption)}"><span class="mag" style="--c:${PINS[i % 4]}"></span>${art(w, '', 'student work')}</button><span class="cap">${esc(w.caption)}</span></div>`).join('');
 }
@@ -156,6 +171,7 @@ function buildAbout() {
   const A = S.about;
   $('#aboutphoto').innerHTML = A.photo ? `<img class="photo-real" src="${esc(A.photo)}" alt="Bran Peterson">` : `<img src="images/doodles/head.png" alt="Bran's self portrait doodle">`;
   $('#bio').innerHTML = A.bio.map(p => `<p>${esc(p)}</p>`).join('');
+  $('#toolsblock').hidden = !A.tools.length;
   $('#tools').innerHTML = A.tools.map((t, i) => `<span class="postit" style="background:${CHIP_COLORS[i % 4]};transform:rotate(${[-3, 2, -2, 3][i % 4]}deg)">${esc(t)}</span>`).join('');
   $('#timeline').innerHTML = A.timeline.map(t => `<div><b>${esc(t.year)}</b><p>${esc(t.text)}</p></div>`).join('');
 }
@@ -308,28 +324,90 @@ document.addEventListener('click', e => {
    LIGHTBOX (illustrations, classroom photos, student work)
    ===================================================================== */
 const LB = {
-  ill: () => S.illustrations.items.map((p, i) => ({ html: art(p, 'square'), title: p.title, meta: [p.medium, p.year, p.note].filter(Boolean), hidden: $(`#gallery .item:nth-child(${i + 1})`)?.hidden })),
-  class: () => S.teaching.classroom.map(c => ({ html: art(c, 'square', 'classroom photo', CAMERA), title: c.caption, meta: ['In the classroom'] })),
-  student: () => S.teaching.studentWork.map(w => ({ html: art(w, 'square', 'student work'), title: w.caption, meta: ['Student work, shared with permission'] })),
+  ill: () => S.illustrations.items.map((p, i) => ({ html: art(p, 'square', '', PENCIL, true), title: p.title, meta: [p.medium, p.year].filter(Boolean), note: p.note,
+    process: hasProcess(p) ? p.process.filter(x => x.image) : [], final: p.image, hidden: $(`#gallery .item:nth-child(${i + 1})`)?.hidden })),
+  class: () => S.teaching.classroom.map(c => ({ html: art(c, 'square', 'classroom photo', CAMERA, true), title: c.caption, meta: ['In the classroom'] })),
+  student: () => S.teaching.studentWork.map(w => ({ html: art(w, 'square', 'student work', PENCIL, true), title: w.caption, meta: ['Student work'] })),
+  proj: p => S.teaching.projects[p].images.map(x => ({ html: art(x, 'square', 'project photo', CAMERA, true), title: x.caption || S.teaching.projects[p].title,
+    meta: [S.teaching.projects[p].title, S.teaching.projects[p].grade].filter(Boolean) })),
 };
 let lbList = [], lbIdx = 0, lbReturn = null;
+
+/* ---- process rewind ----
+   process: [] in content.js lists steps in the order Bran made them (first sketch first).
+   The lightbox shows them newest to oldest, so you "rewind" from the finished piece. */
+let rwTimer = null, rwState = 'final';
+function stopRewind(resetImage) {
+  clearTimeout(rwTimer); rwTimer = null;
+  const sh = $('#lbsheet'); sh.classList.remove('rewinding', 'rewound'); sh.style.removeProperty('--jx');
+  $('#rwplaytxt').innerHTML = '&#9664;&#9664; watch it rewind'; rwState = 'final';
+  const it = lbList[lbIdx];
+  if (resetImage && it && it.final) { const img = $('#lbart img'); if (img) img.src = it.final; }
+}
+function playRewind(forward) {
+  const it = lbList[lbIdx]; if (!it || !it.process.length) return;
+  const steps = [{ image: it.final, label: 'finished' }, ...it.process.slice().reverse()];
+  if (forward) steps.reverse();
+  const sh = $('#lbsheet'), img = $('#lbart img'), vhs = $('#vhs');
+  clearTimeout(rwTimer); sh.classList.remove('rewound'); sh.classList.add('rewinding');
+  steps.forEach(s => { const pre = new Image(); pre.src = s.image; });
+  let k = 0;
+  const tick = () => {
+    const st = steps[k];
+    vhs.innerHTML = (forward ? '&#9654;&#9654; ' : '&#9664;&#9664; ') + esc(st.label || '');
+    if (reduce) img.src = st.image;
+    else { img.style.opacity = 0; setTimeout(() => { img.src = st.image; img.style.opacity = 1; sh.style.setProperty('--jx', (Math.random() * 6 - 3) + 'px'); }, 140); }
+    k++;
+    if (k < steps.length) rwTimer = setTimeout(tick, reduce ? 1200 : 900);
+    else rwTimer = setTimeout(() => {
+      sh.classList.remove('rewinding'); sh.style.removeProperty('--jx');
+      if (forward) { sh.classList.remove('rewound'); rwState = 'final'; $('#rwplaytxt').innerHTML = '&#9664;&#9664; watch it rewind'; }
+      else { sh.classList.add('rewound'); vhs.textContent = 'where it started'; rwState = 'start'; $('#rwplaytxt').innerHTML = '&#9654; play it forward'; }
+    }, 700);
+  };
+  tick();
+}
+function buildRewind(it) {
+  const box = $('#rewind');
+  if (!it.process.length) { box.hidden = true; box.innerHTML = ''; return; }
+  const back = it.process.slice().reverse(), n = back.length;
+  box.innerHTML = `<header class="rwhead"><h3 class="mh">Rewinding ${esc(it.title.length > 48 ? 'this piece' : it.title)}</h3><p>From the finished piece back to where it started.</p></header>`
+    + back.map((p, i) => `<figure class="rstep" style="--c:${PINS[i % 5]}"><span class="rcount">&#9664;&#9664; ${i + 1} of ${n} back</span>
+        <span class="rlabel">${esc(p.label || 'step ' + (n - i))}</span>${p.note ? `<span class="rnote">${esc(p.note)}</span>` : ''}
+        <div class="sheet" style="transform:rotate(${tilt(i, .5)}deg)"><span class="mag" style="--c:${PINS[(i + 2) % 5]}"></span><img src="${esc(p.image)}" alt="${esc((p.label || 'Process step') + ', ' + it.title)}" loading="lazy" decoding="async"></div></figure>`).join('')
+    + `<div class="rend"><p class="mh">where it all started</p><button type="button" id="rwtop">&uarr; back to the finished piece</button></div>`;
+  box.hidden = false;
+  $('#rwtop').onclick = () => $('#lbscroll').scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+}
 function lbShow(i) {
+  stopRewind(false);
   const n = lbList.length; lbIdx = (i + n) % n;
   const it = lbList[lbIdx];
   $('#lbart').innerHTML = it.html;
-  $('#lbinfo').innerHTML = `<span class="mag" style="--c:var(--ink)"></span>${esc(it.title)}${it.meta.length ? '<br><br>' + it.meta.map(esc).join('<br>') : ''}<small>${lbIdx + 1} / ${n}</small>`;
+  $('#lbinfo').innerHTML = `<span class="mag" style="--c:var(--ink)"></span>${esc(it.title)}${it.meta.length ? '<br><br>' + it.meta.map(esc).join('<br>') : ''}${it.note ? `<span class="note">${esc(it.note)}</span>` : ''}<small>${lbIdx + 1} / ${n}</small>`;
+  const proc = it.process || [];
+  $('#rwbar').hidden = !proc.length;
+  if (proc.length) $('#rwdowntxt').innerHTML = `rewind the process<br><small>${proc.length} step${proc.length > 1 ? 's' : ''} back to the first sketch</small>`;
+  buildRewind({ ...it, process: proc });
+  $('#lbscroll').scrollTop = 0;
 }
-function lbOpen(group, i) {
-  const all = LB[group]();
+function lbOpen(group, i, p) {
+  const all = group === 'proj' ? LB.proj(p) : LB[group]();
   lbList = all.filter(x => !x.hidden); const pos = lbList.indexOf(all[i]);
   lbReturn = document.activeElement; $('#lb').hidden = false; lbShow(pos < 0 ? 0 : pos); $('#lbx').focus();
 }
-function lbClose() { $('#lb').hidden = true; lbReturn && lbReturn.focus(); }
-$('#board').addEventListener('click', e => { const b = e.target.closest('[data-lb]'); if (b) lbOpen(b.dataset.lb, +b.dataset.i); });
+function lbClose() { stopRewind(false); $('#lb').hidden = true; lbReturn && lbReturn.focus(); }
+$('#board').addEventListener('click', e => { const b = e.target.closest('[data-lb]'); if (b) lbOpen(b.dataset.lb, +b.dataset.i, +b.dataset.p); });
 $('#lbprev').onclick = () => lbShow(lbIdx - 1);
 $('#lbnext').onclick = () => lbShow(lbIdx + 1);
 $('#lbx').onclick = lbClose;
-$('#lb').addEventListener('click', e => { if (e.target.id === 'lb') lbClose(); });
+$('#rwdown').onclick = () => {
+  const sc = $('#lbscroll'), head = $('#rewind .rwhead'); if (!head) return;
+  const top = head.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop - 40;
+  sc.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+};
+$('#rwplay').onclick = () => { if (rwTimer) { stopRewind(true); return; } playRewind(rwState === 'start'); };
+$('#lb').addEventListener('click', e => { if (e.target.id === 'lb' || e.target.classList.contains('lbmain')) lbClose(); });
 addEventListener('keydown', e => {
   if ($('#lb').hidden) return;
   if (e.key === 'Escape') lbClose();
