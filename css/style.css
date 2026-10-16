@@ -275,6 +275,8 @@ button.sheet:hover{transform:rotate(0deg) translateY(-6px)!important;box-shadow:
 .award .ribbon{position:absolute;left:16px;top:50%;width:42px;height:42px;margin-top:-30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE9A8,#E3B23C 60%,#B9861E);box-shadow:0 0 0 4px #F3D27A}
 .award .ribbon::before,.award .ribbon::after{content:"";position:absolute;top:34px;width:14px;height:24px;background:var(--red);clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)}
 .award .ribbon::before{left:6px;transform:rotate(14deg)}.award .ribbon::after{right:6px;transform:rotate(-14deg)}
+.sitelink{display:inline-block;margin:34px 0 0 10px;font-size:24px;text-decoration:none;transform:rotate(2.5deg);transition:transform .2s}
+.sitelink:hover,.sitelink:focus-visible{transform:rotate(0) scale(1.04)}
 /* the animatic, in its own section under the trailer */
 .animatic{max-width:1300px;margin:20px auto 0;display:grid;grid-template-columns:2fr 1fr;gap:44px;align-items:center}
 .screen.small{outline-width:3px}

@@ -87,6 +87,7 @@ window.SITE = {
     showreel: { title: "Mind of Their Own: trailer", video: "images/animations/moto-trailer.mp4", poster: "images/animations/moto-trailer-poster.jpg", length: "1:47" },
     note: ["Mind of Their Own", "proof of concept trailer"],
     award: ["Presidential Purchase Award", "Adelphi University"],
+    website: { label: ["Visit the", "Mind of Their Own", "website"], url: "https://mindoftheirown.netlify.app" },
     /* The animatic gets its own section under the trailer */
     animatic: { title: "Mind of Their Own: animatic", video: "images/animations/moto-animatic.mp4", poster: "images/animations/moto-animatic-poster.jpg", length: "1:18",
                 note: "Where it started: the short timed out in rough boards, before any final animation." },

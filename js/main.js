@@ -123,6 +123,7 @@ function buildAnimations() {
   setScreen(A.showreel, false);
   $('#animnote').insertAdjacentHTML('beforeend', A.note.map(esc).join('<br>'));
   if (A.award) { $('#award').hidden = false; $('#award').innerHTML = `<span class="ribbon" aria-hidden="true"></span><b>${esc(A.award[0])}</b>${esc(A.award[1] || '')}`; }
+  if (A.website && A.website.url) { const l = $('#sitelink'); l.hidden = false; l.href = A.website.url; l.innerHTML = `<span class="mag" style="--c:var(--green)"></span>${[].concat(A.website.label).map(esc).join('<br>')} <span aria-hidden="true">&#8599;</span><span class="visually-hidden"> (opens in a new tab)</span>`; }
   $('#animaticblock').hidden = !(A.animatic && (A.animatic.video || A.animatic.poster));
   if (A.animatic) { setScreen(A.animatic, false, $('#reel2'), $('#reelcap2')); $('#animnote2').textContent = A.animatic.note || ''; }
   if (A.sidenote) $('#sidehand').innerHTML = A.sidenote.link
