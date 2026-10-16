@@ -33,7 +33,7 @@ window.SITE = {
   name: "Bran Peterson",
   tagline: ["illustrator", "animator", "art teacher"],
   email: "Branparts@gmail.com",
-  instagram: "Branbitious",
+  instagram: "brandasund.peterson",
 
   /* Contact form: paste a Formspree form URL here (free at formspree.io)
      to have messages land in Bran's inbox. Left empty, the Send button
@@ -42,35 +42,38 @@ window.SITE = {
 
   /* ---------------------------------------------------------------- */
   illustrations: {
-    intro: "Scenes, posters, album art and portraits. Click any piece to see it bigger.",
+    intro: "Illustrations, posters, album covers, character designs and sketches. Click any piece to see it bigger.",
+    /* The filter post-its, in order. Give every piece one of these in tags.
+       A category with nothing in it yet shows a "coming soon" note. */
+    categories: ["Illustrations", "Posters and Album Covers", "Character Designs", "Sketches and studies"],
     items: [
       { title: "Skater Fights Off Telekinetic Martian Invaders in the Produce Aisle of the Grocery Store (from the Perspective of the Skateboard)",
-        short: "Skater vs. Martian Invaders", year: "2025", tags: ["Scenes"],
+        short: "Skater vs. Martian Invaders", year: "2025", tags: ["Illustrations"],
         image: "images/illustrations/skater-vs-martian-invaders.jpg", thumb: "images/illustrations/skater-vs-martian-invaders-sm.jpg",
         note: "a.k.a. SFOTMIITPAOTGS(FTPOTS)",
         process: [] },
-      { title: "Purple Pufferfish in Green City", year: "2025", tags: ["Scenes"],
+      { title: "Purple Pufferfish in Green City", year: "2025", tags: ["Illustrations"],
         image: "images/illustrations/purple-pufferfish-in-green-city.jpg", thumb: "images/illustrations/purple-pufferfish-in-green-city-sm.jpg",
         process: [] },
-      { title: "Colony Album Cover", year: "2024", tags: ["Album art"], note: "Album cover for The Colony.",
+      { title: "Colony Album Cover", year: "2024", tags: ["Posters and Album Covers"], note: "Album cover for The Colony.",
         image: "images/illustrations/colony-album-cover.jpg", thumb: "images/illustrations/colony-album-cover-sm.jpg",
         process: [] },
-      { title: "Metal vs. Man", year: "2026", tags: ["Scenes"],
+      { title: "Metal vs. Man", year: "2026", tags: ["Illustrations"],
         image: "images/illustrations/metal-vs-man.jpg", thumb: "images/illustrations/metal-vs-man-sm.jpg",
         process: [] },
-      { title: "Purpose Without People", tags: ["Posters"], note: "Poster for Mind of Their Own, my animated short.",
+      { title: "Purpose Without People", tags: ["Posters and Album Covers"], note: "Poster for Mind of Their Own, my animated short.",
         image: "images/illustrations/moto-poster-purpose-without-people.jpg", thumb: "images/illustrations/moto-poster-purpose-without-people-sm.jpg",
         process: [] },
-      { title: "A Few Screws Loose", tags: ["Posters"], note: "Poster for Mind of Their Own, my animated short.",
+      { title: "A Few Screws Loose", tags: ["Posters and Album Covers"], note: "Poster for Mind of Their Own, my animated short.",
         image: "images/illustrations/moto-poster-a-few-screws-loose.jpg", thumb: "images/illustrations/moto-poster-a-few-screws-loose-sm.jpg",
         process: [] },
-      { title: "Made For A Reason", tags: ["Posters"], note: "Poster for Mind of Their Own, my animated short.",
+      { title: "Made For A Reason", tags: ["Posters and Album Covers"], note: "Poster for Mind of Their Own, my animated short.",
         image: "images/illustrations/moto-poster-made-for-a-reason.jpg", thumb: "images/illustrations/moto-poster-made-for-a-reason-sm.jpg",
         process: [] },
-      { title: "Untitled portrait", tags: ["Portraits"],                     // PLACEHOLDER title (file was IMG_4749)
+      { title: "Untitled portrait", tags: ["Posters and Album Covers"],                     // PLACEHOLDER title (file was IMG_4749)
         image: "images/illustrations/untitled-portrait.jpg", thumb: "images/illustrations/untitled-portrait-sm.jpg",
         process: [] },
-      { title: "Spaghetti Box", tags: ["Scenes"],                             // PLACEHOLDER title (file was speghettibox3)
+      { title: "Spaghetti Box", tags: ["Illustrations"],                             // PLACEHOLDER title (file was speghettibox3)
         image: "images/illustrations/spaghetti-box.jpg", thumb: "images/illustrations/spaghetti-box-sm.jpg",
         process: [] },
     ]
@@ -78,10 +81,15 @@ window.SITE = {
 
   /* ---------------------------------------------------------------- */
   animations: {
-    intro: "Animatics, shorts and loops. Everything plays right on the board.",
-    /* video: a .mp4 in images/animations/  OR a YouTube/Vimeo link */
-    showreel: { title: "Mind of Their Own: animatic", video: "images/animations/moto-animatic.mp4", poster: "images/animations/moto-animatic-poster.jpg", length: "1:18" },
-    note: ["From my short", "Mind of Their Own"],
+    intro: "The Mind of Their Own trailer, plus the animatic behind it. Everything plays right on the board.",
+    /* video: a .mp4 in images/animations/  OR a YouTube/Vimeo link.
+       The trailer is the big screen at the top. */
+    showreel: { title: "Mind of Their Own: trailer", video: "images/animations/moto-trailer.mp4", poster: "images/animations/moto-trailer-poster.jpg", length: "1:47" },
+    note: ["Mind of Their Own", "proof of concept trailer"],
+    award: ["Presidential Purchase Award", "Adelphi University"],
+    /* The animatic gets its own section under the trailer */
+    animatic: { title: "Mind of Their Own: animatic", video: "images/animations/moto-animatic.mp4", poster: "images/animations/moto-animatic-poster.jpg", length: "1:18",
+                note: "Where it started: the short timed out in rough boards, before any final animation." },
     sidenote: { lines: ["the posters for it", "are in Illustrations"], link: "illustrations" },
     /* Shorts & loops strip. Hidden until at least one clip has a video. */
     clips: [
@@ -102,7 +110,7 @@ window.SITE = {
       "Art + design fundamentals: line, shape, color",
       "Character design",
       "Still life painting",
-      "Art history projects: Monet, Matisse",
+      "Art history-based projects",
       "Creative process, from thumbnail to final",
     ],
     tip: ["Every class balances", "study time + studio time"],
@@ -169,17 +177,18 @@ window.SITE = {
   /* ---------------------------------------------------------------- */
   about: {
     photo: "",            // leave empty to use the blue head doodle
+    /* [words](#section) turns into a link to that page of the site */
     bio: [
-      "I grew up surrounded by creative people. The musicians, artists and writers in my family pushed me to chase every creative hobby I had, and by 15 I was planning a career in art and taking online illustration courses.",
-      "Somewhere between finishing my associate's degree and planning my bachelor's, I realized that alongside my own work I wanted to teach what I'd learned to younger generations. Today that means illustration and animation on one side, and teaching on the other, with elementary and middle school students and at an art class.",
-      "I believe everyone deserves a creative outlet, and that making art is one of the best ways to learn how to solve problems.",
+      "Hello! My name is Brandasund Peterson, and I am a New York based creative. I am a multidisciplinary artist and art teacher who enjoys using various different processes to create pieces that are captivating and intrigue the viewer. More than anything, I love to make pieces that are fun for the viewer, and make them question the ideas and processes behind it.",
+      "I graduated from Adelphi University with a bachelor's degree in Art Education. Alongside my studies to become a teacher, I learned animation and illustration, and spent my senior year creating a traditionally animated proof of concept trailer for my senior thesis. This trailer, which was a collaborative group effort led by me, won the Presidential Purchase award at Adelphi University. You can view the trailer [here](#animations).",
+      "The experiences I gained working on my animated short film have pushed me to create more narrative driven illustrations and animations. Alongside creating art, I also am eager to teach it to my students. I firmly believe that creating art is about problem solving and learning to overcome challenges as much as it is about expression. My goal is to spend my life creating art, animations, and lessons that inspire people to challenge themselves and pursue their creative passions.",
     ],
     tools: [],            // e.g. ["Procreate", "Photoshop", "Pencil + paper"] (empty = hidden)
     timeline: [
-      { year: "Growing up", text: "A family of musicians, artists and writers" },
-      { year: "Age 15",     text: "Started online illustration courses" },
-      { year: "College",    text: "Associate's degree, bachelor's next" },
-      { year: "Now",        text: "Teaching art + making Mind of Their Own" },
+      { year: "Growing up",  text: "A family of musicians, artists and writers" },
+      { year: "High School", text: "Began learning character design and illustration. Took AP studio art and made a portfolio based off of retro-futurism and industrial-surrealism." },
+      { year: "College",     text: "Graduated from Nassau Community College in 2024 with an associate's degree in Art. Graduated from Adelphi University with a Bachelor's in Art Education. Led a team of creatives and accomplished my goal of creating my first animated short film." },
+      { year: "Current",     text: "Teaching specialized art and animation courses at the Art Guild of Port Washington. Working on different illustrations and animated projects. Open for work!" },
     ]
   },
 

@@ -84,7 +84,7 @@ A custom domain (like branpeterson.com) can be added in the same Pages settings.
 - Eraser wipe page transitions, marker tray nav with the active marker uncapped
 - "Draw more!" post-it lets visitors draw on the board with the tray markers; the eraser wipes it
 - Illustrations: filterable pinned wall plus lightbox (arrow keys and Esc work), with a process rewind on pieces that have WIP shots
-- Animations: showreel screen, film strip of clips that play in the screen, process strip
+- Animations: the Mind of Their Own trailer on the big screen with its award, the animatic in its own section below, plus an optional film strip of clips and a process strip
 - Art Teaching: what I teach, teaching philosophy (with the full PDF), classroom photos on a clothesline, project cards that open every photo from that project, student work wall
 - About and Contact / Commissions with a price menu
 - Works on phones: doodles stack in a grid, marker caps become the bottom bar

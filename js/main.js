@@ -66,7 +66,7 @@ function buildChrome() {
 function buildPreviews() {
   const ill = S.illustrations.items.slice(0, 3).map((p, i) =>
     `<a class="pv" href="#illustrations" data-go="illustrations"><span class="sheet" style="transform:rotate(${tilt(i)}deg)"><span class="mag" style="--c:${PINS[i]}"></span>${art(p)}</span><span class="cap">${esc(p.short || p.title)}</span></a>`);
-  const reels = [S.animations.showreel, ...S.animations.clips].filter(c => c && (c.video || c.poster));
+  const reels = [S.animations.showreel, S.animations.animatic, ...S.animations.clips].filter(c => c && (c.video || c.poster));
   const animList = reels.length ? reels : S.animations.clips;
   const anim = animList.slice(0, 3).map((c, i) =>
     `<a class="pv" href="#animations" data-go="animations"><span class="sheet" style="transform:rotate(${tilt(i + 2)}deg)"><span class="mag" style="--c:${PINS[i + 1]}"></span>${c.poster ? `<img src="${esc(c.poster)}" alt="" loading="lazy">` : placeholder('wide', 'clip goes here')}</span><span class="cap">${esc(c.title)}</span></a>`);
@@ -85,7 +85,7 @@ function buildPreviews() {
 let galleryList = [];
 function buildIllustrations() {
   const items = S.illustrations.items;
-  const tags = ['All', ...new Set(items.flatMap(p => p.tags || []))];
+  const tags = ['All', ...(S.illustrations.categories || []), ...new Set(items.flatMap(p => p.tags || []))].filter((t, i, a) => a.indexOf(t) === i);
   $('#chips').innerHTML = tags.map((t, i) =>
     `<button class="chip" type="button" data-tag="${esc(t)}" aria-pressed="${i === 0}" style="background:${CHIP_COLORS[i % 4]};transform:rotate(${[-3, 2, -1, 3, -2][i % 5]}deg)">${esc(t)}</button>`).join('');
   $('#gallery').innerHTML = items.map((p, i) =>
@@ -95,6 +95,11 @@ function buildIllustrations() {
     const c = e.target.closest('.chip'); if (!c) return;
     $$('.chip').forEach(x => x.setAttribute('aria-pressed', x === c));
     $$('#gallery .item').forEach(it => it.hidden = c.dataset.tag !== 'All' && !it.dataset.tags.split('|').includes(c.dataset.tag));
+    const none = !$$('#gallery .item').some(it => !it.hidden);
+    let note = $('#gallery-empty');
+    if (!note) { $('#gallery').insertAdjacentHTML('afterend', '<p class="gallery-empty hs" id="gallery-empty" hidden></p>'); note = $('#gallery-empty'); }
+    note.hidden = !none;
+    if (none) note.textContent = `${c.dataset.tag} are going up on the board soon. Check back!`;
   });
 }
 
@@ -106,17 +111,20 @@ function videoEmbed(url, autoplay) {
   if (vm) return `<iframe src="https://player.vimeo.com/video/${vm[1]}${autoplay ? '?autoplay=1' : ''}" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
   return `<video src="${esc(url)}" controls playsinline ${autoplay ? 'autoplay' : ''} preload="metadata"></video>`;
 }
-function setScreen(v, autoplay) {
-  const scr = $('#reel');
+function setScreen(v, autoplay, scr = $('#reel'), cap = $('#reelcap')) {
+  const isTrailer = v === S.animations.showreel;
   if (v && v.video) scr.innerHTML = videoEmbed(v.video, autoplay);
-  else scr.innerHTML = `<div class="empty"><img src="images/doodles/camera.png" alt="">${v && v.title !== S.animations.showreel.title ? esc(v.title) + ' plays here' : 'showreel plays here'}</div>`;
+  else scr.innerHTML = `<div class="empty"><img src="images/doodles/camera.png" alt="">${isTrailer ? 'the trailer plays here soon' : esc(v.title) + ' plays here'}</div>`;
   if (v && v.poster && !autoplay && v.video && !/youtu|vimeo/.test(v.video)) $('video', scr).poster = v.poster;
-  $('#reelcap').innerHTML = `<span class="mh">${esc(v.title)}</span><span class="hs">${esc(v.length || '')}</span>`;
+  cap.innerHTML = `<span class="mh">${esc(v.title)}</span><span class="hs">${esc(v.length || (isTrailer && !v.video ? 'coming soon' : ''))}</span>`;
 }
 function buildAnimations() {
   const A = S.animations;
   setScreen(A.showreel, false);
   $('#animnote').insertAdjacentHTML('beforeend', A.note.map(esc).join('<br>'));
+  if (A.award) { $('#award').hidden = false; $('#award').innerHTML = `<span class="ribbon" aria-hidden="true"></span><b>${esc(A.award[0])}</b>${esc(A.award[1] || '')}`; }
+  $('#animaticblock').hidden = !(A.animatic && (A.animatic.video || A.animatic.poster));
+  if (A.animatic) { setScreen(A.animatic, false, $('#reel2'), $('#reelcap2')); $('#animnote2').textContent = A.animatic.note || ''; }
   if (A.sidenote) $('#sidehand').innerHTML = A.sidenote.link
     ? `<a href="#${esc(A.sidenote.link)}" data-go="${esc(A.sidenote.link)}">${A.sidenote.lines.map(esc).join('<br>')} &rarr;</a>`
     : A.sidenote.lines.map(esc).join('<br>');
@@ -170,7 +178,7 @@ function buildTeaching() {
 function buildAbout() {
   const A = S.about;
   $('#aboutphoto').innerHTML = A.photo ? `<img class="photo-real" src="${esc(A.photo)}" alt="Bran Peterson">` : `<img src="images/doodles/head.png" alt="Bran's self portrait doodle">`;
-  $('#bio').innerHTML = A.bio.map(p => `<p>${esc(p)}</p>`).join('');
+  $('#bio').innerHTML = A.bio.map(p => `<p>${esc(p).replace(/\[([^\]]+)\]\(#([\w-]+)\)/g, '<a href="#$2" data-go="$2">$1</a>')}</p>`).join('');
   $('#toolsblock').hidden = !A.tools.length;
   $('#tools').innerHTML = A.tools.map((t, i) => `<span class="postit" style="background:${CHIP_COLORS[i % 4]};transform:rotate(${[-3, 2, -2, 3][i % 4]}deg)">${esc(t)}</span>`).join('');
   $('#timeline').innerHTML = A.timeline.map(t => `<div><b>${esc(t.year)}</b><p>${esc(t.text)}</p></div>`).join('');
